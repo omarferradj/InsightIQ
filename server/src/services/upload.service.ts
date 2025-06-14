@@ -1,5 +1,6 @@
 import { Document } from "../models/Document.model";
 import { extractTextFromFile } from "../utils/fileHandler";
+import { embedDocumentChunks } from "./embedding.service";
 
 export async function handleDocumentUpload({
   userId,
@@ -21,5 +22,10 @@ export async function handleDocumentUpload({
     rawText,
   });
 
+  await embedDocumentChunks(rawText, {
+    docId: doc._id.toString(),
+    title: originalName,
+    userId: userId,
+  });
   return await doc.save();
 }
